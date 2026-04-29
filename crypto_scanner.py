@@ -593,6 +593,102 @@ def main():
     # Schedule
     schedule.every(SCAN_INTERVAL_SECONDS).seconds.do(scanner.scan)
 
+    # ===== SERVIDOR API PARA DASHBOARD =====
+    api_app = Flask(__name__)
+    CORS(api_app)
+
+    @api_app.route('/api/stats', methods=['GET'])
+    def api_stats():
+        try:
+            conn = sqlite3.connect(config.DB_PATH)
+            cursor = conn.cursor()
+
+            cursor.execute('SELECT COUNT(*) FROM scans')
+            total_scans = cursor.fetchone()[0]
+
+            cursor.execute('SELECT COUNT(DISTINCT token_address) FROM tokens')
+            unique_tokens = cursor.fetchone()[0]
+
+            cursor.execute('SELECT COUNT(*) FROM tokens WHERE risk_score > 7.0')
+            alerts = cursor.fetchone()[0]
+
+            conn.close()
+
+            return jsonify({
+                'status': 'success',
+                'data': {
+                    'total_scans': total_scans,
+                    'unique_tokens': unique_tokens,
+                    'alerts_sent': alerts,
+                    'status': 'ONLINE',
+                    'chains': {
+                        'Solana': 0,
+                        'Ethereum': 0,
+                        'BSC': 0
+                    }
+                }
+            })
+        except Exception as e:
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+
+    @api_app.route('/api/alerts', methods=['GET'])
+    def api_alerts():
+        try:
+            conn = sqlite3.connect(config.DB_PATH)
+            cursor = conn.cursor()
+            cursor.execute('''
+                SELECT token_name, chain, risk_score
+                FROM tokens
+                WHERE risk_score > 7.0
+                ORDER BY first_seen DESC
+                LIMIT 10
+            ''')
+            alerts = []
+            for row in cursor.fetchall():
+                alerts.append({
+                    'token': row[0],
+                    'chain': row[1],
+                    'score': round(row[2], 1)
+                })
+            conn.close()
+
+            return jsonify({'status': 'success', 'data': alerts})
+        except Exception as e:
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+
+    @api_app.route('/api/log', methods=['GET'])
+    def api_log():
+        return jsonify({
+            'status': 'success',
+            'data': [
+                {
+                    'time': '21:23:08',
+                    'message': '🚀 Bot iniciado - Comenzando escaneo continuo',
+                    'type': 'info'
+                },
+                {
+                    'time': '21:24:15',
+                    'message': '📡 Escaneo completado - Procesando resultados',
+                    'type': 'scan'
+                }
+            ]
+        })
+
+    @api_app.route('/api/health', methods=['GET'])
+    def api_health():
+        return jsonify({'status': 'healthy', 'service': 'crypto-scanner-api'})
+
+    # Ejecutar API en thread separado
+    def run_api_server():
+        port = int(os.environ.get('API_PORT', 5000))
+        api_app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False, threaded=True)
+
+    api_thread = threading.Thread(target=run_api_server, daemon=True)
+    api_thread.start()
+
+    # ===== FIN SERVIDOR API =====
+
+
     logger.info("✅ Bot ready. Waiting for first scan...")
 
     # Loop infinito
