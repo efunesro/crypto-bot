@@ -1,0 +1,93 @@
+🚀 CRYPTO BOT - QUICKSTART (5 MIN)
+════════════════════════════════════════════════════════════════════════
+
+⚡ SOLO NECESITAS 3 PASOS:
+
+┌─────────────────────────────────────────────────────────────────┐
+│ PASO 1: CREAR DISCORD WEBHOOK (2 MIN)                          │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Ve a: https://discord.new
+2. Click "Create My Own" → "For me and my friends"
+3. Nombre: "Crypto Bot" → "Create"
+4. Click en "+" (crear canal) → "alerts" → "Create"
+5. En #alerts: Click ⚙️ → Integrations → Webhooks → New Webhook
+6. Nombre: "CryptoBot"
+7. Click "Copy Webhook URL"
+
+🔗 GUARDA ESTA URL - LA NECESITARÁS
+
+════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ PASO 2: SETUP LOCAL (2 MIN)                                    │
+└─────────────────────────────────────────────────────────────────┘
+
+Windows (PowerShell):
+  python -m venv venv
+  venv\Scripts\activate
+  pip install -r requirements.txt
+
+Mac/Linux (Terminal):
+  python3 -m venv venv
+  source venv/bin/activate
+  pip install -r requirements.txt
+
+════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────┐
+│ PASO 3: CONFIGURAR WEBHOOK                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+1. Crea archivo: .env
+2. Dentro, escribe:
+
+   DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/TU_URL_AQUI
+
+3. Reemplaza TU_URL_AQUI con tu webhook URL real
+4. Guarda
+
+════════════════════════════════════════════════════════════════════
+
+✅ ¡LISTO! PARA PROBAR:
+
+  python crypto_scanner.py
+
+Deberías ver:
+  🚀 CRYPTO SCANNER BOT - STARTING
+  ✅ Bot ready. Waiting for first scan...
+
+════════════════════════════════════════════════════════════════════
+
+🌐 PARA 24/7 EN CLOUD (5 MIN MÁS):
+
+1. Ve a: https://railway.app → Sign Up (GitHub)
+2. "New Project" → "Deploy from GitHub"
+3. Conecta tu repo (o crea uno nuevo)
+4. Variables → DISCORD_WEBHOOK_URL = Tu URL
+5. Click "Deploy"
+
+✅ Bot corriendo 24/7 GRATIS
+
+════════════════════════════════════════════════════════════════════
+
+❓ ¿PROBLEMAS?
+
+- Discord no recibe: Verifica que webhook URL es correcto en .env
+- Setup error: Asegúrate que Python 3.9+ está instalado
+- Railway error: Lee SETUP_GUIDE.md
+
+════════════════════════════════════════════════════════════════════
+
+📚 ARCHIVOS IMPORTANTES:
+
+  README.md          → Documentación completa
+  SETUP_GUIDE.md     → Guía detallada paso a paso
+  config.py          → Ajusta criterios aquí
+  utils.py           → Ver datos: python utils.py
+
+════════════════════════════════════════════════════════════════════
+
+¡Listo! Ahora monitorea Discord para alertas 🚀
+
+════════════════════════════════════════════════════════════════════
