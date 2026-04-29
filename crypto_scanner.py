@@ -21,6 +21,9 @@ from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
 from enum import Enum
 import hashlib
+from flask import Flask, jsonify
+from flask_cors import CORS
+import threading
 from config import (
     SCREENING_CRITERIA, CHAINS, DB_PATH, SCAN_INTERVAL_SECONDS,
     ALERT_THRESHOLDS, SCORING_WEIGHTS, DEXSCREENER_API, RUGCHECK_API,
