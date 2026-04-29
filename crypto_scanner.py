@@ -686,6 +686,27 @@ def main():
     api_thread = threading.Thread(target=run_api_server, daemon=True)
     api_thread.start()
 
+
+    # ===== RUTA PARA SERVIR DASHBOARD =====
+    @api_app.route('/', methods=['GET'])
+    def serve_dashboard():
+        """Sirve el dashboard HTML"""
+        dashboard_path = os.path.join(os.path.dirname(__file__), 'dashboard.html')
+        if os.path.exists(dashboard_path):
+            with open(dashboard_path, 'r', encoding='utf-8') as f:
+                return f.read(), 200, {'Content-Type': 'text/html; charset=utf-8'}
+        return jsonify({'error': 'Dashboard not found'}), 404
+
+    @api_app.route('/dashboard', methods=['GET'])
+    def serve_dashboard_alt():
+        """Ruta alternativa para el dashboard"""
+        dashboard_path = os.path.join(os.path.dirname(__file__), 'dashboard.html')
+        if os.path.exists(dashboard_path):
+            with open(dashboard_path, 'r', encoding='utf-8') as f:
+                return f.read(), 200, {'Content-Type': 'text/html; charset=utf-8'}
+        return jsonify({'error': 'Dashboard not found'}), 404
+    # ===== FIN DASHBOARD =====
+
     # ===== FIN SERVIDOR API =====
 
 
