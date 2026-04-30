@@ -679,29 +679,21 @@ def main():
         return jsonify({'status': 'healthy', 'service': 'crypto-scanner-api'})
 
     # Ejecutar API en thread separado
+
+    # ===== DASHBOARD ROUTE =====
+    @api_app.route('/')
+    def dashboard():
+        dashboard_path = os.path.join(os.path.dirname(__file__), 'dashboard.html')
+        try:
+            with open(dashboard_path, 'r', encoding='utf-8') as f:
+                return f.read()
+        except:
+            return jsonify({'error': 'Dashboard not found'}), 404
+    # ===== END DASHBOARD =====
     def run_api_server():
         port = int(os.environ.get('API_PORT', 5000))
         api_app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False, threaded=True)
 
-    # ===== RUTA PARA SERVIR DASHBOARD =====
-    @api_app.route('/', methods=['GET'])
-    def serve_dashboard():
-        """Sirve el dashboard HTML"""
-        dashboard_path = os.path.join(os.path.dirname(__file__), 'dashboard.html')
-        if os.path.exists(dashboard_path):
-            with open(dashboard_path, 'r', encoding='utf-8') as f:
-                return f.read(), 200, {'Content-Type': 'text/html; charset=utf-8'}
-        return jsonify({'error': 'Dashboard not found'}), 404
-
-    @api_app.route('/dashboard', methods=['GET'])
-    def serve_dashboard_alt():
-        """Ruta alternativa para el dashboard"""
-        dashboard_path = os.path.join(os.path.dirname(__file__), 'dashboard.html')
-        if os.path.exists(dashboard_path):
-            with open(dashboard_path, 'r', encoding='utf-8') as f:
-                return f.read(), 200, {'Content-Type': 'text/html; charset=utf-8'}
-        return jsonify({'error': 'Dashboard not found'}), 404
-    # ===== FIN DASHBOARD =====
     api_thread = threading.Thread(target=run_api_server, daemon=True)
     api_thread.start()
 
