@@ -1,1 +1,1 @@
-worker: python crypto_scanner.py
+web: python crypto_scanner.py
