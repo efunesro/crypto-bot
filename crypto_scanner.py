@@ -683,10 +683,6 @@ def main():
         port = int(os.environ.get('API_PORT', 5000))
         api_app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False, threaded=True)
 
-    api_thread = threading.Thread(target=run_api_server, daemon=True)
-    api_thread.start()
-
-
     # ===== RUTA PARA SERVIR DASHBOARD =====
     @api_app.route('/', methods=['GET'])
     def serve_dashboard():
@@ -706,7 +702,11 @@ def main():
                 return f.read(), 200, {'Content-Type': 'text/html; charset=utf-8'}
         return jsonify({'error': 'Dashboard not found'}), 404
     # ===== FIN DASHBOARD =====
+    api_thread = threading.Thread(target=run_api_server, daemon=True)
+    api_thread.start()
 
+
+    
     # ===== FIN SERVIDOR API =====
 
 
