@@ -220,8 +220,7 @@ def server_error(error):
 def run_api_server():
     """Run Flask API server in background thread"""
     try:
-        port = int(os.environ.get('API_PORT', 5000))
-        host = '0.0.0.0'
+        port = int(os.environ.get('PORT', os.environ.get('API_PORT', 5000)))        host = '0.0.0.0'
         logger.info(f"Starting Flask API server on {host}:{port}")
         api_app.run(host=host, port=port, debug=False, use_reloader=False, threaded=True)
     except Exception as e:
